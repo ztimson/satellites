@@ -1,0 +1,31 @@
+name: Sync Satellite TLEs
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-tle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch TLE data
+        run: |
+          curl -sL "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle" \
+            > satellites.tle
+
+      - name: Commit and push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git add satellites.tle
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: update satellite TLEs [skip ci]"
+            git push origin main
+          else
+            echo "🚫 No changes detected, skipping push."
+          fi
