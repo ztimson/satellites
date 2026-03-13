@@ -27,7 +27,7 @@ jobs:
             git config --global user.email "bot@gmail.com"
             git config --global user.name "Bot"
             git commit -m "chore: update satellite TLEs [skip ci]"
-            git push origin main
+            git push origin master
           else
             echo "🚫 No changes detected, skipping push."
           fi
