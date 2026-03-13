@@ -20,7 +20,7 @@ jobs:
 
       - name: Commit and push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
           git add satellites.tle
           if ! git diff --staged --quiet; then
