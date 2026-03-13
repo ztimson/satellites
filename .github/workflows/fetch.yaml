@@ -24,6 +24,8 @@ jobs:
         run: |
           git add satellites.tle
           if ! git diff --staged --quiet; then
+            git config --global user.email "bot@gmail.com"
+            git config --global user.name "Bot"
             git commit -m "chore: update satellite TLEs [skip ci]"
             git push origin main
           else
