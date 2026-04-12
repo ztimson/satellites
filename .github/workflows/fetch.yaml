@@ -1,13 +1,10 @@
 name: Sync Satellite TLEs
-
 on:
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   update-tle:
     runs-on: ubuntu-latest
@@ -20,9 +17,14 @@ jobs:
         run: |
           curl -sL "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle" \
             > satellites.tle
-
+      
       - name: Commit and push
         run: |
+          if grep -qi "data has not updated" satellites.tle; then
+            echo "🚫 Data has not updated, skipping push."
+            exit 0
+          fi
+          
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add satellites.tle
